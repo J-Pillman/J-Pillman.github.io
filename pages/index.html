@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Digital Shield · Consulta antes de actuar</title>
+
+    <!-- Favicon (escudo del producto) -->
+    <link rel="icon" href="../favicon.ico" sizes="any">
+
+    <!-- Enlace a la hoja de estilos -->
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <!-- Script principal (defer evita problemas con la carga del DOM) -->
+    <script src="../js/main.js" defer></script>
+
+</head>
+
+<body>
+
+    <!-- Enlace de salto para navegación por teclado -->
+    <a class="skip" href="#verificar">Saltar al contenido</a>
+
+    <!-- Contenedor principal del encabezado -->
+    <header class="header">
+
+        <!-- Logotipo del producto -->
+        <a class="logo" href="#verificar" aria-label="CyberShield, ir al inicio">
+            <img class="logo-img" src="../assets/icons/escudo.png" alt="" width="40" height="40">
+            Digital Shield
+        </a>
+
+        <!-- Navegación entre áreas -->
+        <nav aria-label="Secciones">
+            <a href="#verificar">Verificar</a>
+            <a href="#contacto">Contacto</a>
+            <a href="#ayuda">Ayuda</a>
+            <a href="#aprender">Aprender</a>
+            <a href="#privacidad">¿Qué hace la IA?</a>
+        </nav>
+
+        <!-- Control de tamaño de texto (HU-046) -->
+        <button id="btn-texto" class="btn-aplus" type="button" aria-label="Texto más grande" title="Texto más grande">A+</button>
+
+    </header>
+
+    <main>
+
+        <!-- PORTADA: propuesta de valor y acceso directo a la verificación -->
+        <section class="hero" aria-labelledby="t-hero">
+
+            <!-- Texto principal de la portada -->
+            <div class="hero-texto">
+
+                <p class="etiqueta">Seguridad inteligente para adultos mayores</p>
+                <h1 id="t-hero">¿Te llegó un mensaje raro? Consulta antes de actuar.</h1>
+                <p class="hero-sub">Pega el mensaje, el enlace o cuenta la llamada. Te decimos si parece una estafa, en palabras sencillas.</p>
+
+                <div class="hero-botones">
+                    <a class="btn btn-primario" href="#verificar">Verificar un mensaje</a>
+                    <a class="btn" href="#como-funciona">Cómo funciona</a>
+                </div>
+
+                <ul class="chips">
+                    <li>Sin registro</li>
+                    <li>Sin instalar nada</li>
+                    <li>Lenguaje claro</li>
+                </ul>
+
+            </div>
+
+            <!-- Ejemplo visual del resultado (decorativo) -->
+            <div class="hero-visual" aria-hidden="true">
+                <div class="ejemplo">
+                    <p class="ejemplo-msg">“Último aviso: confirma tu cuenta o la bloquearemos hoy mismo.”</p>
+                    <p class="ejemplo-veredicto">⚠ Esto es peligroso</p>
+                    <p class="ejemplo-nota">Intento de presión detectado. No compartas códigos ni abras el enlace.</p>
+                    <span class="ejemplo-btn">Llamar a mi contacto de confianza</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ÁREA 1: VERIFICAR (HU-010, 001, 002, 003, 005, 006, 007, 008, 023, 009, 015, 018, 019) -->
+        <section id="verificar" aria-labelledby="t-verificar">
+
+            <h2 id="t-verificar">Verificar un mensaje</h2>
+            <p class="sub">Consulta antes de actuar. Sin registro y sin instalar nada.</p>
+
+            <div class="columnas">
+
+                <!-- Columna del formulario -->
+                <div>
+
+                    <p class="aviso-pasos"><strong>1. Pausa · 2. No des datos · 3. Verifica</strong></p>
+
+                    <!-- Selector de modalidad (HU-001, 002, 003) -->
+                    <div class="selector" role="group" aria-label="Qué quieres revisar">
+                        <button type="button" class="opcion activa" data-modo="mensaje" aria-pressed="true">Analizar mensaje/link</button>
+                        <button type="button" class="opcion" data-modo="llamada" aria-pressed="false">Describir llamada</button>
+                    </div>
+
+                    <form id="form-verificar" novalidate>
+
+                        <label for="texto" id="lbl-texto">Mensaje o enlace</label>
+                        <textarea id="texto" maxlength="1500" rows="6" aria-describedby="contador ayuda-texto"
+                            placeholder="Pega aquí el mensaje completo. Los enlaces se muestran como texto, sin abrirlos."></textarea>
+
+                        <p id="contador" aria-live="polite">0 / 1500 caracteres</p>
+                        <p id="ayuda-texto" class="nota">La IA revisa el contenido para orientarte. No reemplaza a alguien de confianza. No ingreses claves ni tarjetas.</p>
+
+                        <!-- Mensajes de privacidad y conexión (HU-018, 019) -->
+                        <div id="msg-form" class="caja caja-aviso" role="alert" hidden></div>
+
+                        <!-- Ayuda para copiar y pegar (HU-020) -->
+                        <div id="panel-copiar" class="caja" hidden>
+                            <ol>
+                                <li>Mantén presionado el mensaje.</li>
+                                <li>Toca “Copiar”.</li>
+                                <li>Vuelve aquí y toca “Pegar texto”.</li>
+                            </ol>
+                            <button id="btn-cerrar-copiar" class="btn" type="button">Cerrar ayuda</button>
+                        </div>
+
+                        <div class="acciones">
+                            <button id="btn-analizar" class="btn btn-primario" type="submit" disabled>Analizar</button>
+                            <button id="btn-pegar" class="btn" type="button">Pegar texto</button>
+                            <button id="btn-limpiar" class="btn" type="button">Limpiar texto</button>
+                            <button id="btn-ayuda-copiar" class="btn" type="button" aria-expanded="false">Ayuda para copiar</button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <!-- Columna del resultado -->
+                <div id="zona-resultado" aria-live="polite">
+
+                    <!-- Estado de análisis en curso (HU-005) -->
+                    <div id="cargando" class="caja" hidden>
+                        <p><strong>Revisando tu mensaje…</strong></p>
+                        <div class="barra" role="progressbar" aria-label="Análisis en curso"><span></span></div>
+                        <p class="nota">Esto puede tomar unos instantes.</p>
+                    </div>
+
+                    <!-- Tarjeta de veredicto (HU-006, 007, 023) -->
+                    <div id="resultado" hidden>
+
+                        <h2 id="veredicto" tabindex="-1"></h2>
+                        <p id="veredicto-resumen" class="caja"></p>
+
+                        <!-- Explicación sin tecnicismos y señales (HU-008, 011, 012, 013, 016, 017) -->
+                        <div class="caja">
+                            <h3>¿Por qué?</h3>
+                            <ul id="lista-senales"></ul>
+                        </div>
+
+                        <!-- Ayuda prioritaria cuando hay peligro (HU-027, 025, 028, 029) -->
+                        <div id="ayuda-peligro" class="acciones-col" hidden>
+                            <a id="btn-llamar" class="btn btn-peligro" href="#contacto">Llamar a mi contacto de confianza</a>
+                            <button id="btn-compartir" class="btn" type="button">Compartir con mi contacto de confianza</button>
+                            <button id="btn-nocontesta" class="btn" type="button">Ver qué hacer si no contesta</button>
+                            <a class="btn" href="#ayuda">Ya hice clic o di datos</a>
+                        </div>
+
+                        <!-- Orientación si el contacto no contesta (HU-029) -->
+                        <div id="panel-nocontesta" class="caja" hidden>
+                            <ol>
+                                <li>No respondas al remitente.</li>
+                                <li>No hagas clic ni des datos o códigos.</li>
+                                <li>Verifica por el canal oficial de la entidad.</li>
+                            </ol>
+                            <p class="nota">Puedes esperar y volver a llamar al número que ya conoces. No uses el teléfono que llegó en el mensaje.</p>
+                        </div>
+
+                        <!-- Vista previa antes de compartir (HU-028) -->
+                        <div id="panel-compartir" class="caja" hidden>
+                            <h3>Revisa antes de compartir</h3>
+                            <p><strong>Para:</strong> <span id="comp-para"></span></p>
+                            <p><strong>Mensaje:</strong> <span id="comp-msg"></span></p>
+                            <p class="nota">Se compartirá solo este contenido y el resultado.</p>
+                            <button id="btn-conf-comp" class="btn btn-primario" type="button">Confirmar envío</button>
+                            <button id="btn-canc-comp" class="btn" type="button">Cancelar envío</button>
+                        </div>
+
+                        <button id="btn-otro" class="btn btn-primario" type="button">Analizar otro mensaje</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- CÓMO FUNCIONA Y BENEFICIOS -->
+        <section id="como-funciona" aria-labelledby="t-como">
+
+            <h2 id="t-como">Cómo funciona</h2>
+
+            <ol class="pasos">
+                <li class="caja"><span class="num" aria-hidden="true">1</span><h3>Pega o cuenta</h3><p>Copia el mensaje o el enlace, o describe lo que te dijeron en la llamada.</p></li>
+                <li class="caja"><span class="num" aria-hidden="true">2</span><h3>Revisamos las señales</h3><p>Buscamos presión, pedidos de dinero o claves, enlaces falsos y otras señales de engaño.</p></li>
+                <li class="caja"><span class="num" aria-hidden="true">3</span><h3>Recibe una respuesta clara</h3><p>Te explicamos el motivo y te ayudamos a llamar a tu persona de confianza.</p></li>
+            </ol>
+
+            <h2 class="sep">Pensado para ti</h2>
+
+            <div class="cuadricula beneficios">
+                <article class="caja"><h3>Palabras sencillas</h3><p>Sin tecnicismos: te decimos qué hacer y por qué.</p></article>
+                <article class="caja"><h3>Ayuda a un toque</h3><p>Llama o comparte el mensaje con tu contacto de confianza.</p></article>
+                <article class="caja"><h3>Tu privacidad primero</h3><p>No guardamos un historial de lo que analizas.</p></article>
+                <article class="caja"><h3>Texto más grande</h3><p>El botón A+ amplía todo el contenido sin romper la página.</p></article>
+            </div>
+
+        </section>
+
+        <!-- ÁREA 2: CONTACTO DE CONFIANZA (HU-026, 025, 030) -->
+        <section id="contacto" aria-labelledby="t-contacto">
+
+            <h2 id="t-contacto">Contacto de confianza</h2>
+            <p class="sub">Elige a alguien que pueda acompañarte.</p>
+
+            <div class="columnas">
+
+                <!-- Formulario de contacto -->
+                <form id="form-contacto" novalidate>
+
+                    <label for="c-nombre">Nombre</label>
+                    <input id="c-nombre" type="text" autocomplete="off">
+
+                    <label for="c-tel">Teléfono</label>
+                    <input id="c-tel" type="tel" inputmode="tel" placeholder="Ejemplo: 999 123 456" aria-describedby="err-contacto">
+
+                    <p id="err-contacto" class="error" role="alert" hidden></p>
+
+                    <button class="btn btn-primario" type="submit">Guardar contacto</button>
+
+                </form>
+
+                <!-- Tarjeta del contacto guardado -->
+                <div id="tarjeta-contacto" class="caja" hidden>
+
+                    <p><strong id="t-nombre"></strong> está configurada como tu contacto de confianza.</p>
+                    <p id="t-tel"></p>
+
+                    <a id="btn-llamar-ana" class="btn btn-primario" href="#">Llamar</a>
+                    <button id="btn-editar" class="btn" type="button">Editar contacto</button>
+                    <button id="btn-eliminar" class="btn" type="button">Eliminar contacto</button>
+
+                    <!-- Confirmación de eliminación (HU-030) -->
+                    <div id="conf-eliminar" role="alert" hidden>
+                        <p><strong>¿Eliminar este contacto?</strong></p>
+                        <button id="btn-si-elim" class="btn btn-peligro" type="button">Sí, eliminar</button>
+                        <button id="btn-no-elim" class="btn" type="button">Cancelar eliminación</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ÁREA 3: AYUDA (HU-037, 039) -->
+        <section id="ayuda" aria-labelledby="t-ayuda">
+
+            <h2 id="t-ayuda">Ya hice clic o di datos</h2>
+            <p class="sub">No estás solo. Revisemos qué puedes proteger.</p>
+
+            <div class="columnas">
+
+                <!-- Selección de datos expuestos -->
+                <fieldset>
+                    <legend>Selecciona una o varias opciones</legend>
+                    <label class="check"><input type="checkbox" value="nombre"> Nombre</label>
+                    <label class="check"><input type="checkbox" value="tarjeta"> Últimos dígitos de tarjeta</label>
+                    <label class="check"><input type="checkbox" value="sms"> Código por SMS</label>
+                    <label class="check"><input type="checkbox" value="clave"> Clave</label>
+                    <label class="check"><input type="checkbox" value="enlace"> Hice clic en un enlace</label>
+                </fieldset>
+
+                <!-- Recomendaciones según la selección -->
+                <div class="caja">
+                    <h3>Recomendaciones según tu selección</h3>
+                    <ul id="lista-recom"><li>Marca lo que compartiste para ver qué hacer primero.</li></ul>
+                </div>
+
+            </div>
+
+            <!-- Cómo reportar (HU-039) -->
+            <div class="caja">
+                <h3>Cómo reportar un intento</h3>
+                <ul>
+                    <li>Reporte del mensaje en la plataforma donde lo recibiste.</li>
+                    <li>Canal oficial de la entidad suplantada.</li>
+                    <li>Canal oficial de denuncia, si corresponde.</li>
+                </ul>
+                <p class="nota">Ten a mano: mensaje, número del remitente, enlace como texto y captura. Puedes reportar aunque no hayas perdido dinero.</p>
+            </div>
+
+        </section>
+
+        <!-- ÁREA 4: APRENDER (HU-043) -->
+        <section id="aprender" aria-labelledby="t-aprender">
+
+            <h2 id="t-aprender">Aprende a reconocer señales</h2>
+
+            <div class="cuadricula">
+                <article class="caja"><p>Banco: “Envía tu código o bloqueamos tu cuenta”.</p><p class="nota">Señal: pide códigos y te presiona.</p></article>
+                <article class="caja"><p>Paquete: “Paga para liberar tu envío”.</p><p class="nota">Señal: cobra desde un enlace inesperado.</p></article>
+                <article class="caja"><p>WhatsApp: “Soy tu familiar, hazme un Yape urgente”.</p><p class="nota">Señal: pide dinero sin verificar identidad.</p></article>
+            </div>
+
+            <p class="nota">Un logo o un nombre conocido no prueban que el mensaje sea auténtico.</p>
+
+        </section>
+
+        <!-- ÁREA 5: PRIVACIDAD (HU-024, 047) -->
+        <section id="privacidad" aria-labelledby="t-priv">
+
+            <h2 id="t-priv">¿Qué hace la IA con mi mensaje?</h2>
+
+            <div class="caja">
+                <p>La herramienta revisa el contenido que ingresas para orientarte sobre señales de engaño. Es una ayuda, no reemplaza a alguien de confianza.</p>
+                <p>No guardamos un historial del texto analizado. Al recargar o cerrar la pestaña, desaparece. El contacto de confianza se guarda aparte, solo en esta pestaña, y puedes eliminarlo cuando quieras.</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="footer">
+        <img class="footer-logo" src="../assets/images/logo-digital-shield.jpeg" alt="Digital Shield: seguridad inteligente con IA para adultos mayores" width="260" height="158">
+        <p>CyberShield · Digital Shield. Los datos de ejemplo son ficticios. Ninguna tecnología es infalible: este resultado es una orientación, no una garantía.</p>
+    </footer>
+
+</body>
+
+</html>
